@@ -1,0 +1,59 @@
+// Menampilkan identitas suatu user id
+SELECT students_id, name, social_media_contact FROM member WHERE students_id = <input>
+
+// Menampilkan identitas-identitas dengan nama tertentu
+SELECT students_id, name, social_media_contact FROM member WHERE name LIKE '<input>'
+
+// Menampilkan daftar buku seorang member
+SELECT book.isbn, book.book_title, owns.number_of_copy FROM owns
+INNER JOIN member ON member.students_id = owns.students_id
+INNER JOIN book ON book.isbn = owns.isbn
+WHERE owns.students_id = <input>
+
+// Menampilkan profil buku tertentu
+SELECT isbn, book_title FROM book
+WHERE isbn = <input>;
+
+// Menampilkan member yang memiliki suatu buku dengan isbn tertentu
+SELECT member.students_id, member.name, member.social_media_contact FROM owns
+INNER JOIN member ON member.students_id = owns.students_id
+INNER JOIN book ON book.isbn = owns.isbn
+WHERE owns.isbn = <input>;
+
+// Prosedur add_member
+CREATE PROCEDURE add_member (students_id_input INT, name_input VARCHAR(50), contact_input VARCHAR(50))
+BEGIN
+	IF NOT EXISTS (SELECT 1 FROM member WHERE students_id = students_id_input) THEN
+		INSERT INTO member (students_id, name, social_media_contact)
+		VALUES (students_id_input, name_input, contact_input) 
+	END IF;
+END
+
+// Prosedur add_book
+CREATE PROCEDURE add_book (isbn_input VARCHAR(13), title_input VARCHAR())
+BEGIN
+	IF NOT EXISTS (SELECT 1 FROM book WHERE isbn = isbn_input) THEN
+		INSERT INTO book (isbn, book_title)
+		VALUES (isbn_input, title_input)
+	END IF;
+END
+
+// Prosedur add_to_shelf
+CREATE PROCEDURE add_to_shelf (students_id_input INT, isbn_input VARCHAR(13), number_of_copy_input INT)
+BEGIN
+    IF EXISTS (SELECT 1 FROM owns WHERE students_id = students_id_input AND isbn = isbn_input) THEN
+        UPDATE owns SET number_of_copy = number_of_copy + number_of_copy_input;
+    ELSE
+        INSERT INTO owns (students_id, isbn, number_of_copy)
+        VALUES (students_id_input, isbn_input, number_of_copy_input);
+    END IF;
+END
+
+// Menambahkan member baru dengan user id A, nama P, dan kontak media sosial X
+CALL add_member(A,P,X)
+
+// Menambah buku pribadi suatu user dengan user id A dan buku ber-ISBN Y sebanyak N
+CALL add_to_shelf (A,Y,N)
+
+// Menambah deskripsi buku baru dengan ISBN A dan judul buku X
+CALL add_book(A,X)
