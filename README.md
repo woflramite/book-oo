@@ -38,8 +38,7 @@ Cara untuk mendapatkan data member dengan ID tertentu adalah dengan mengisi beri
 http://167.205.67.244:9801/member/{nomor id}
 ```
 > Catatan: Nomor ID HARUS berupa integer. Input berupa string belum di-handle dan menyebabkan program tertutup.
-### Gambar 3 Hasil Data Member Tertentu
-Mendapatkan Data Buku Ber-ISBN Tertentu
+### Mendapatkan Data Buku Ber-ISBN Tertentu
 Cara untuk mendapatkan data member dengan ID tertentu adalah dengan mengisi berikut di address bar.
 ```sh
 http://167.205.67.244:9801/book/{nomor isbn}
